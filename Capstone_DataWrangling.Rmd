@@ -1,0 +1,12 @@
+---
+title: "Capstone Project Data Cleaning Steps"
+output: html_document
+---
+
+#### When I first decided to investigate whether there was a correlation between podcast episode popularity and descriptions, I hoped to find a recent dataset on Kaggle or Data World that included that information. This proved difficult: the few datasets on podcasts I could find were either out of date or were simply lists of all podcasts listed on iTunes. Knowing that the data I needed didn't exsist, I set out to create the dataset myself from scracth.
+
+#### This proved to be a fairly tedious task, but I knew that it would be a time saver when it came time for me to wrangle and clean my data. My initial thought was to use the top 100 podcasts overall on Apple podcasts. On closer inspection, it became clear that the topics are so dispirate -- covering history, politics, pop culture, sports, etc. -- that it would be hard to prove trends in keywords and popularity. I decided to stick to one subcategory -- Society & Culture -- to focus on for my dataset. I also decided that since each podcast can have dozens, if not hundreds, of episodes, I would scale my dataset down to the Top 50 podcasts in Society & Culture knowing that this would still yield hundreds of episodes for me to comb through.
+
+#### I started collecting data in a CSV document focusing on collecting the podcast name, episode title, date, running time and, most importantly, episode description and popularity rating. I wanted to focus on the bare minimum knowing that cutting out the clutter would yield cleaner data. Since Apple's API is not the most user friendly, though, I scraped a different podcast hosting site, Stitcher, to obtain the data and used Apple Podcasts for their popularity rating.
+
+#### Once my data was collected, I set to work on cleaning it. For this, I used some basic data cleaning functions. I used the tolower function to make my text uniform, removed stopwords, numbers and punctuation, and used the stemDocument function. Once my data was cleaned, I could  move forward with analysis.
