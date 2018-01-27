@@ -18,7 +18,7 @@ I would like to prove that certain topics are more appealing to the podcast list
 ### **3. What data are you going to use for this? How will you acquire this data?**
 
 Since I don't want my sample to be too disparate, I will stick to the top 50 or so podcasts listed in the Soctiety & Culture section on Apple Podcasts. I also don't want to get bogged down in too much information, so I will only use the podcast name, episode title, date, running time and, most importantly, episode description and popularity rating in my set. I'll use a self-created dataset, since similar datasets on Data World or Kaggle are either few and far between or otherwise unusable for this project.
- + Apple's API is not the most user friendly, though, so I will scrape a different podcast hosting site, Stitcher, to obtain the data for my dataset and use Apple Podcasts for their popularity rating, the most important information I need for what I'm hoping to accomplish.  
+Apple's API is not the most user friendly, though, so I will scrape a different podcast hosting site, Stitcher, to obtain the data for my dataset and use Apple Podcasts for their popularity rating, the most important information I need for what I'm hoping to accomplish.  
 
 ### **4. In brief, outline your approach to solving this problem (knowing that this might change later).**
 
