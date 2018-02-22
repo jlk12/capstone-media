@@ -11,10 +11,10 @@ Podcasts cultivate engaged listeners, have large audiences, and pose a legitimat
 
 According to Recode, the podcast industry's ad revenue will reach $220 million in 2017, up 85 percent from 2016’s $119 million. The blog also discusses several interesting points regarding the medium’s huge potential in both advertising revenue and growth rate:
 
-	+ Up until now there has been comically little data about podcast consumption, especially compared to other digital media.
-	+ This matters to podcast creators because they are unable to tell how the stuff they make performs — at best, they can usually only tell if someone has downloaded an episode or started to stream it.
-	+ This also matters to podcast advertisers, who would like to know if people are listening to the ads they pay for. Right now, many of them are doing a crude end run around this data void by asking listeners to use a show-specific code when they visit a site after hearing an ad.
-	+ Some podcast software has already provided some of this data. And the data that Apple is offering now is still fairly crude. But the majority of podcast consumption happens on Apple’s software, and up until now it has been a black hole. So this is a big move for the industry, which generates a lot of attention (among media types, at least) but a very modest amount of money so far.
++ Up until now there has been comically little data about podcast consumption, especially compared to other digital media.
++ This matters to podcast creators because they are unable to tell how the stuff they make performs — at best, they can usually only tell if someone has downloaded an episode or started to stream it.
++ This also matters to podcast advertisers, who would like to know if people are listening to the ads they pay for. Right now, many of them are doing a crude end run around this data void by asking listeners to use a show-specific code when they visit a site after hearing an ad.
++ Some podcast software has already provided some of this data. And the data that Apple is offering now is still fairly crude. But the majority of podcast consumption happens on Apple’s software, and up until now it has been a black hole. So this is a big move for the industry, which generates a lot of attention (among media types, at least) but a very modest amount of money so far.
 	
 Despite the steady growth of podcast listening and spike in media attention over the past few years, the industry itself has trafficked in a relatively minuscule volume of cash money compared to its digital-media peers. 
 
@@ -52,7 +52,7 @@ I started collecting data in a CSV document focusing on collecting the podcast n
 
 Once my data was collected, I set to work on cleaning it. For this, I used some basic data cleaning functions. I used:
 
-	+	the tolower function to make my text uniform
+	+ the tolower function to make my text uniform
 	+ removed stopwords, numbers and punctuation
 	+ used the stemDocument function
 
