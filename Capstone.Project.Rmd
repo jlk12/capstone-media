@@ -1,0 +1,112 @@
+---
+title: "Capstone.Project"
+author: "Jennifer Klein"
+date: "2/22/2018"
+output: html_document
+---
+
+Podcasts have emerged as the trendy new medium in media. But there’s still so little we know about the audience listening to this nascent form of entertainment. We know how many times a podcast is downloaded, but we don’t know audience demographics, how many people are skipping through ads, etc. That’s all about to change with Apple’s recent announcement that they are finally going to provide comprehensive analytics about listener behavior to podcast publishers. We can use data to seek out emerging trends in the genre.
+
+Podcasts cultivate engaged listeners, have large audiences, and pose a legitimate challenge to the radio industry and other content mediums. And now, with podcasts slated to hit television and movie screens in the coming months, it’s crucial to learn as much about Hollywood’s hottest new source for material as possible. 
+
+According to Recode, the podcast industry's ad revenue will reach $220 million in 2017, up 85 percent from 2016’s $119 million. The blog also discusses several interesting points regarding the medium’s huge potential in both advertising revenue and growth rate:
+
+	+ Up until now there has been comically little data about podcast consumption, especially compared to other digital media.
+	+ This matters to podcast creators because they are unable to tell how the stuff they make performs — at best, they can usually only tell if someone has downloaded an episode or started to stream it.
+	+ This also matters to podcast advertisers, who would like to know if people are listening to the ads they pay for. Right now, many of them are doing a crude end run around this data void by asking listeners to use a show-specific code when they visit a site after hearing an ad.
+	+ Some podcast software has already provided some of this data. And the data that Apple is offering now is still fairly crude. But the majority of podcast consumption happens on Apple’s software, and up until now it has been a black hole. So this is a big move for the industry, which generates a lot of attention (among media types, at least) but a very modest amount of money so far.
+	
+Despite the steady growth of podcast listening and spike in media attention over the past few years, the industry itself has trafficked in a relatively minuscule volume of cash money compared to its digital-media peers. 
+
+I would like to prove that certain topics are more appealing to the podcast listener and therefore publishers can tailor their content around these subjects to attract more listeners, garner more downloads and, ultimately, attract more advertisers and increase their revenue.
+
+## My Approach
+
+Since I don't want my sample to be too disparate, I will stick to the top 50 or so podcasts listed in the Society & Culture section on Apple Podcasts. I also don't want to get bogged down in too much information, so I will only use the podcast name, episode title, date, running time and, most importantly, episode description and popularity rating in my set. I'll use a self-created dataset, since similar datasets on Data World or Kaggle are either few and far between or otherwise unusable for this project. Apple's API is not the most user friendly, though, so I will scrape a different podcast hosting site, Stitcher, to obtain the data for my dataset and use Apple Podcasts for their popularity rating, the most important information I need for what I'm hoping to accomplish.
+
+## Loading My Libraries
+
+First, I'll load all the relevant libraries for this project. 
+
+```{r, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(tm)
+library(SnowballC)
+library(ggplot2)
+library(wordcloud)
+library(ape)
+library(cluster)
+library(readr)
+```
+
+## Collecting My Data
+
+When I first decided to investigate whether there was a correlation between podcast episode popularity and descriptions, I hoped to find a recent dataset on Kaggle or Data World that included that information. This proved difficult: the few datasets on podcasts I could find were either out of date or were simply lists of all podcasts listed on iTunes. Knowing that the data I needed didn't exist, I set out to create the dataset myself from scratch.
+
+This proved to be a fairly tedious task, but I knew that it would be a time saver when it came time for me to wrangle and clean my data. My initial thought was to use the top 100 podcasts overall on Apple podcasts. On closer inspection, it became clear that the topics are so disparate -- covering history, politics, pop culture, sports, etc. -- that it would be hard to prove trends in keywords and popularity. I decided to stick to one subcategory -- Society & Culture -- to focus on for my dataset. I also decided that since each podcast can have dozens, if not hundreds, of episodes, I would scale my dataset down to the Top 50 podcasts in Society & Culture knowing that this would still yield hundreds of episodes for me to comb through.
+
+I started collecting data in a CSV document focusing on collecting the podcast name, episode title, date, running time and, most importantly, episode description and popularity rating. I wanted to focus on the bare minimum knowing that cutting out the clutter would yield cleaner data. Since Apple's API is not the most user friendly, though, I scraped a different podcast hosting site, Stitcher, to obtain the data and used Apple Podcasts for their popularity rating.
+
+## Cleaning My Data
+
+Once my data was collected, I set to work on cleaning it. For this, I used some basic data cleaning functions. I used:
+
+	+	the tolower function to make my text uniform
+	+ removed stopwords, numbers and punctuation
+	+ used the stemDocument function
+
+```{r}
+Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
+
+Podcast_Dataset <- tm_map (Podcast_Dataset, tolower)
+Podcast_Dataset <- tm_map (Podcast_Dataset, removeWords, stopwords("english"))
+Podcast_Dataset <- tm_map (Podcast_Dataset, removeNumbers)
+Podcast_Dataset <- tm_map(Podcast_Dataset, removePunctuation)
+Podcast_Dataset <- tm_map (Podcast_Dataset, stemDocument)
+```
+
+Once my data was cleaned, I could move forward with analysis.
+
+## Creating a DTM
+
+I then created a Document Term Matrix so I can see the frequency of terms that occur in my data set. We can see that the DTM has 2,567 terms.
+
+```{r}
+Podcast_Dataset <- DocumentTermMatrix (Podcast_Dataset)
+
+dim(Podcast_Dataset)
+```
+
+## Plotting Frequency
+
+Now for the fun stuff: we can start to look for stories in our data.
+
+First, we'll look at the most frequent words - words occurring more than 20 times, in our case. Since the data set we're working with is fairly small, it made sense to keep this number relatively low. If we used a number much higher, we'd run the risk of not returning any results at all.
+
+```{r}
+min_freq <- 20
+findFreqTerms(Podcast_Dataset, lowfreq = min_freq)
+term_freq <- colSums(as.matrix(Podcast_Dataset))
+term_freq <- subset(term_freq, term_freq >= min_freq)
+freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
+
+ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
+  geom_bar(stat="identity") + 
+  coord_flip() +
+  ggtitle("Frequency of Most-Used Terms") +
+  xlab("Terms") +
+  ylab("Frequency") + 
+  theme(plot.title = element_text(size=14, face = "bold", margin = margin(10, 0, 10, 0)), 
+        axis.title.x = element_text(face = "bold", size = 12),
+        axis.title.y = element_text(face = "bold", size = 12),
+        axis.text.x = element_text(face = "bold", size = 10),
+        axis.text.y = element_text(face = "bold", size = 10))
+```
+It looks like true crime is a very popular Podcast topic: "killer", "murder", and "victim" are all made it into our most used terms. This makes sense for a medium that exploded in popularity after the series "Serial" premiered in late 2014 (in fact, "Serial" is the 4th most used term in our matrix.) "Conversation," "Discuss" and "Call" are all in our chart. This, to me, suggests that podcasts that feature two hosts interacting with each other, or with listeners calling in, might be more engaging to listeners than one person telling a story or monologue. We also see that the term "historical," "learn" and "political" pop up a lot - perhaps listeners are interested in historical narratives or in learning something about our past to inform our present political climate. And of course, perennial favorites "love" and "life" make an appearance, too.
+
+To better visualize term frequency, we can also look at a wordcloud of the terms.
+
+```{r}
+wordcloud (podcast_corpus, scale = c(2, 0.5), colors = brewer.pal(8, "Paired"),  random.color = TRUE, random.order = FALSE, max.words = 250)
+```
