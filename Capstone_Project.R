@@ -13,34 +13,52 @@ library(readr)
 #Load Cleaned Dataset
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
+#Create a Histogram for Episode Popularity
+
+hist(Podcast_Dataset$`Popularity Rating`,
+     main="Histogram for Episode Popularity",
+     xlab = "Popularity Rating",
+     border = "black",
+     col = "blue",
+     xlim = c(1,5),
+     las = 1,
+     breaks = 5)
+
+#Create Corpus
+podcast_corpus <- Corpus(VectorSource(Podcast_Dataset))
+
 #Perform Transformations
 
 #Convert Text to Lowercase
-Podcast_Dataset <- tm_map (podcast_corpus, tolower)
+podcast_corpus <- tm_map (podcast_corpus, tolower)
 #Remove Stopwords
-Podcast_Dataset <- tm_map (podcast_corpus, removeWords, stopwords("english"))
+podcast_corpus <- tm_map (podcast_corpus, removeWords, stopwords("english"))
 #Remove Numbers
-Podcast_Dataset <- tm_map (podcast_corpus, removeNumbers)
+podcast_corpus <- tm_map (podcast_corpus, removeNumbers)
 #Remove Punctuation
-Podcast_Dataset <- tm_map (podcast_corpus, removePunctuation)
+podcast_corpus <- tm_map (podcast_corpus, removePunctuation)
 #Stem Text
-Podcast_Dataset <- tm_map (podcast_corpus, stemDocument)
-str(Podcast_Dataset)
+podcast_corpus <- tm_map (podcast_corpus, stemDocument)
+#Strip Whitespace
+podcast_corpus <- tm_map (podcast_corpus, stripWhitespace)
+str(podcast_corpus)
 
 #Create DTM
-Podcast_Dataset <- DocumentTermMatrix (podcast_corpus)
-dim(Podcast_Dataset)
+podcast_corpus <- tm_map(podcast_corpus, PlainTextDocument)
+podcast_corpus <- Corpus(VectorSource(podcast_corpus))
+podcast_DTM <- DocumentTermMatrix(podcast_corpus)
+
+dim(podcast_DTM)
 
 #Find Frequent Words 
 
 #Define Frequency Variables
 min_freq <- 20
-#Frequent words
-findFreqTerms(Podcast_Dataset, lowfreq = min_freq)
-# Plot frequent words
-term_freq <- colSums(as.matrix(Podcast_Dataset))
+term_freq <- colSums(as.matrix(podcast_DTM))
 term_freq <- subset(term_freq, term_freq >= min_freq)
 freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
+findFreqTerms(podcast_DTM, lowfreq = min_freq)
+
 ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
   geom_bar(stat="identity") + 
   coord_flip() +
@@ -55,4 +73,3 @@ ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = fre
 
 # Wordcloud
 wordcloud (podcast_corpus, scale = c(2, 0.5), colors = brewer.pal(8, "Paired"),  random.color = TRUE, random.order = FALSE, max.words = 250)
-
