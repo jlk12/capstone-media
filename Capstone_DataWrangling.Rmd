@@ -9,7 +9,10 @@ This proved to be a fairly tedious task, but I knew that it would be a time save
 
 I started collecting data in a CSV document focusing on collecting the podcast name, episode title, date, running time and, most importantly, episode description and popularity rating. I wanted to focus on the bare minimum knowing that cutting out the clutter would yield cleaner data. Since Apple's API is not the most user friendly, though, I scraped a different podcast hosting site, Stitcher, to obtain the data and used Apple Podcasts for their popularity rating.
 
-Once my data was collected, I set to work on cleaning it. For this, I used some basic data cleaning functions. I used:
+Once my data was collected, the next step was to create a corpus. Since I was planning to do some text mining later in my analysis, creating the corpus was a crucial step. 
+
+Withpodcast_corpus <- Corpus (VectorSource(Podcast_Dataset))
+ my corpus was created, I set to work on cleaning my data. For this, I used some basic data cleaning functions. I used:
  + the tolower function to make my text uniform
  + removed stopwords, numbers and punctuation
  + used the stemDocument function
