@@ -7,22 +7,11 @@ library(SnowballC)
 library(ggplot2)
 library(wordcloud)
 library(ape)
-library(cluster)
 library(readr)
 
 #Load Cleaned Dataset
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
-
-#Create a Histogram for Episode Popularity
-
-hist(Podcast_Dataset$`Popularity Rating`,
-     main="Histogram for Episode Popularity",
-     xlab = "Popularity Rating",
-     border = "black",
-     col = "blue",
-     xlim = c(1,5),
-     las = 1,
-     breaks = 5)
+glimpse(Podcast_Dataset)
 
 #Create Corpus
 podcast_corpus <- Corpus(VectorSource(Podcast_Dataset))
@@ -49,6 +38,17 @@ podcast_corpus <- Corpus(VectorSource(podcast_corpus))
 podcast_DTM <- DocumentTermMatrix(podcast_corpus)
 
 dim(podcast_DTM)
+
+#Create a Histogram for Episode Popularity
+
+hist(Podcast_Dataset$`Popularity Rating`,
+     main="Histogram for Episode Popularity",
+     xlab = "Popularity Rating",
+     border = "black",
+     col = "blue",
+     xlim = c(1,5),
+     las = 1,
+     breaks = 5)
 
 #Find Frequent Words 
 
