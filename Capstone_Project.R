@@ -27,6 +27,10 @@ hist(Podcast_Dataset$`Popularity Rating`,
      las = 1,
      breaks = 5)
 
+# Create a scatterplot for Podcast and Running Time
+ggplot(Podcast_Dataset, aes(x = `Running Time`, y = `Podcast`)) +
+  geom_point(position = position_jitter(0.1))
+
 #Perform Transformations
 
 #Convert Text to Lowercase
