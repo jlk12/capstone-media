@@ -1,0 +1,57 @@
+---
+title: "Capstone_Statistics"
+author: "Jennifer Klein"
+date: "3/13/2018"
+output: html_document
+---
+
+
+Now that my dataset is all cleaned up and properly wrangled, it's now ready for analysis. I decided to create a histogram, a scatterplot and a time-series plot to try to gain insight into my data.
+
+## Creating The Histogram
+
+For my histogram, I decided to look into the “Episode Popularity” column from my dataset. As I outlined in the Data Wrangling section, I used Apple Podcasts’ popularity rankings to assign a numerical rating (1-5, with 5 being the highest) to each episode from the top 50 most listened to podcasts in the “Society & Culture” section on Apple’s site.   
+
+```{r}
+library(readr)
+Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
+
+hist(Podcast_Dataset$`Popularity Rating`,
+     main="Histogram for Episode Popularity",
+     xlab = "Popularity Rating",
+     border = "black",
+     col = "blue",
+     xlim = c(1,5),
+     las = 1,
+     breaks = 5)
+```
+
+Here we can see that the majority of podcast episodes are only somewhat popular, with most being ranked at around 3. There are also quite a few unpopular podcasts with those ranked at a 1 or 2 popping up more frequently than those ranked at a 4 or 5. 
+
+## Creating The Scatterplot
+
+Since I collected my data over the summer, I wondered if perhaps the popularity ratings were showing a recency bias. My thought was that perhaps the most popular podcasts were the ones most recently listened to by subscribers who downloaded new episodes every week. These summer episodes would be the most popular, receiving ratings of 4 and 5, while podcasts with earlier release dates would have ratings of 3 or lower.
+
+I decided to make a scatterplot of the “Release Date” and “Popularity Rating” variables. I assigned each month their numeric value (1 for January, 2 for February, etc.) to make my data easier to plot.  
+
+```{r}
+library(ggplot2)
+
+ggplot(Podcast_Dataset, aes(x = `Release Date`, y = `Popularity Rating`)) +
+  geom_point(position = position_jitter(0.5))
+```
+ 
+It turns out, there is somewhat of a correlation there. There are definitely more podcast episodes pulled from the summer months of July and August, and their popularity ratings are pretty high - we can see a lot of 3s, 4s and 5s. Of course, there are some outliers there: what is it about those episodes from January and February that remained so popular months later? I wanted to see what else I could analyze in relation to popularity rating.
+
+## Creating The Time-series Plot
+
+I decided to make a time-series plot for each Podcast's Popularity Rating and Running Time. Maybe shorter podcasts are more popular?
+
+```{r} 
+ggplot(Podcast_Dataset, aes(x = `Popularity Rating`, y = `Running Time`, color = `Podcast`)) +
+  geom_line(position = position_fill(0.1))
+```
+
+According to this time-series plot, there isn’t really a correlation between episode length and popularity. The most popular podcasts come in all different lengths: short, long and in between. 
+
+So outside of recency, what makes a podcast popular? What do listeners want and how can that translate for advertisers and publishers? My guess is that content is king - it’s time to get into some text analysis. 
