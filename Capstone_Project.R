@@ -31,6 +31,10 @@ hist(Podcast_Dataset$`Popularity Rating`,
 ggplot(Podcast_Dataset, aes(x = `Running Time`, y = `Podcast`)) +
   geom_point(position = position_jitter(0.1))
 
+# Create a time-series plot for each Podcast's Running Time and Popularity Rating
+ggplot(Podcast_Dataset, aes(x = `Popularity Rating`, y = `Running Time`, color = `Podcast`)) +
+  geom_line()
+
 #Perform Transformations
 
 #Convert Text to Lowercase
