@@ -33,7 +33,7 @@ ggplot(Podcast_Dataset, aes(x = `Release Date`, y = `Popularity Rating`)) +
 
 # Create a time-series plot for each Podcast's Popularity Rating and Running Time
 ggplot(Podcast_Dataset, aes(x = `Popularity Rating`, y = `Running Time`, color = `Podcast`)) +
-  geom_line()
+  geom_line(position = position_fill(0.5))
 
 #Perform Transformations
 
