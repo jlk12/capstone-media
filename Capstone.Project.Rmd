@@ -4,6 +4,7 @@ author: "Jennifer Klein"
 date: "2/22/2018"
 output: html_document
 ---
+## Inttroduction
 
 Podcasts have emerged as the trendy new medium in media. But there’s still so little we know about the audience listening to this nascent form of entertainment. We know how many times a podcast is downloaded, but we don’t know audience demographics, how many people are skipping through ads, etc. That’s all about to change with Apple’s recent announcement that they are finally going to provide comprehensive analytics about listener behavior to podcast publishers. We can use data to seek out emerging trends in the genre.
 
