@@ -18,14 +18,8 @@ podcast_corpus <- Corpus(VectorSource(Podcast_Dataset))
 
 #Create a Histogram for Episode Popularity
 
-hist(Podcast_Dataset$`Popularity Rating`,
-     main="Histogram for Episode Popularity",
-     xlab = "Popularity Rating",
-     border = "black",
-     col = "blue",
-     xlim = c(1,5),
-     las = 1,
-     breaks = 5)
+ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
 
 # Create a scatterplot for Release Date and Popularity Rating
 ggplot(Podcast_Dataset, aes(x = `Release Date`, y = `Popularity Rating`)) +
