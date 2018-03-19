@@ -13,20 +13,15 @@ Now that my dataset is all cleaned up and properly wrangled, it's now ready for 
 For my histogram, I decided to look into the “Episode Popularity” column from my dataset. As I outlined in the Data Wrangling section, I used Apple Podcasts’ popularity rankings to assign a numerical rating (1-5, with 5 being the highest) to each episode from the top 50 most listened to podcasts in the “Society & Culture” section on Apple’s site.   
 
 ```{r}
+library(ggplot2)
 library(readr)
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
-hist(Podcast_Dataset$`Popularity Rating`,
-     main="Histogram for Episode Popularity",
-     xlab = "Popularity Rating",
-     border = "black",
-     col = "blue",
-     xlim = c(1,5),
-     las = 1,
-     breaks = 5)
+ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
 ```
 
-Here we can see that the majority of podcast episodes are only somewhat popular, with most being ranked at around 3. There are also quite a few unpopular podcasts with those ranked at a 1 or 2 popping up more frequently than those ranked at a 4 or 5. 
+Here we can see that the majority of podcast episodes are only somewhat popular, with most being ranked at around 3. Interestingly, we can also see that popular podcasts ranked at a 5 pop up only slightly more frequently than those that are slightly unpopular, ranked at a 2.
 
 ## Creating The Scatterplot
 
