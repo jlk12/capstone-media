@@ -142,7 +142,7 @@ So outside of recency, what makes a podcast popular? What do listeners want and 
 
 ## Creating a DTM
 
-I then created a Document Term Matrix so I can see the frequency of terms that occur in my data set. We can see that the DTM has 2,567 terms.
+I then created a Document Term Matrix so I can see the frequency of terms that occur in my data set. We can see that the DTM has 2,550 terms.
 
 ```{r}
 Podcast_Dataset <- DocumentTermMatrix (Podcast_Dataset)
