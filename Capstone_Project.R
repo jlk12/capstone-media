@@ -88,6 +88,10 @@ Oprah4 <- Oprah[4:8, 6]
 Oprah3 <- Oprah[9:16, 6]
 Oprah2 <- Oprah[17, 6]
 
+Oprah5DTM <- tm_map(Oprah5, PlainTextDocument)
+Oprah5 <- Corpus(VectorSource(podcast_corpus))
+Oprah5DTM <- DocumentTermMatrix(Oprah5)
+
 #Find Frequent Words 
 
 #Define Frequency Variables for Oprah5
@@ -108,3 +112,4 @@ ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = fre
         axis.title.y = element_text(face="bold", size = 12),
         axis.text.x = element_text(face="bold", size=10),
         axis.text.y = element_text(face="bold", size=10))
+
