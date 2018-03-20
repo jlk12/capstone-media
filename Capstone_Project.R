@@ -1,13 +1,8 @@
 #Load Libraries
 
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 library(tm)
-library(SnowballC)
-library(ggplot2)
 library(wordcloud)
-library(ape)
-library(readr)
 
 #Load Cleaned Dataset
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
