@@ -16,13 +16,18 @@ podcast_corpus <- Corpus(VectorSource(Podcast_Dataset))
 ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
   geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
 
+#Create a Histogram for Release Date
+
+ggplot(Podcast_Dataset, aes(`Release Date`)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
+
 # Create a scatterplot for Release Date and Popularity Rating
-ggplot(Podcast_Dataset, aes(x = `Release Date`, y = `Popularity Rating`)) +
+ggplot(Podcast_Dataset, aes(x = `Episode Length`, y = `Popularity Rating`)) +
   geom_point(position = position_jitter(0.5))
 
 # Create a time-series plot for each Podcast's Popularity Rating and Running Time
 ggplot(Podcast_Dataset, aes(x = `Popularity Rating`, y = `Running Time`, color = `Podcast`)) +
-  geom_line(position = position_fill(0.5))
+  geom_line(position = position_fill(0.5)) +facet_wrap(~Podcast, ncol=4)
 
 #Perform Transformations
 
