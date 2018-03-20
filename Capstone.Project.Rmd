@@ -121,7 +121,7 @@ I decided to make a time-series plot for each Podcast's Popularity Rating and Ru
 
 ```{r} 
 ggplot(Podcast_Dataset, aes(x = `Popularity Rating`, y = `Running Time`, color = `Podcast`)) +
-  geom_line(position = position_fill(0.1))
+  geom_line(position = position_fill(0.5)) +facet_wrap(~Podcast, ncol=4)
 ```
 
 According to this time-series plot, there isn’t really a correlation between episode length and popularity. The most popular podcasts come in all different lengths: short, long and in between. 
