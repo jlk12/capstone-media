@@ -30,15 +30,9 @@ Since I don't want my sample to be too disparate, I will stick to the top 50 or 
 First, I'll load all the relevant libraries for this project. 
 
 ```{r, message=FALSE}
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 library(tm)
-library(SnowballC)
-library(ggplot2)
 library(wordcloud)
-library(ape)
-library(cluster)
-library(readr)
 ```
 
 ## Collecting My Data
@@ -70,6 +64,7 @@ Once my data was collected, I set to work on cleaning it. For this, I used some 
 + used the stemDocument function
 
 ```{r}
+library(tm)
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
 Podcast_Dataset <- tm_map (Podcast_Dataset, tolower)
@@ -90,8 +85,7 @@ Now that my dataset is all cleaned up and properly wrangled, it's now ready for 
 For my histogram, I decided to look into the “Episode Popularity” column from my dataset. As I outlined in the Data Wrangling section, I used Apple Podcasts’ popularity rankings to assign a numerical rating (1-5, with 5 being the highest) to each episode from the top 50 most listened to podcasts in the “Society & Culture” section on Apple’s site.   
 
 ```{r}
-library(ggplot2)
-library(readr)
+library(tidyverse)
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
 ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
