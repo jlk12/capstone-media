@@ -88,20 +88,20 @@ Oprah4 <- Oprah[4:8, 6]
 Oprah3 <- Oprah[9:16, 6]
 Oprah2 <- Oprah[17, 6]
 
-Oprah5DTM <- tm_map(Oprah5, PlainTextDocument)
-Oprah5 <- Corpus(VectorSource(podcast_corpus))
-Oprah5DTM <- DocumentTermMatrix(Oprah5)
-
 #Find Frequent Words 
 
-#Define Frequency Variables for Oprah5
-min_freq <- 5
-term_freq <- colSums(as.matrix(Oprah5))
-term_freq <- subset(term_freq, term_freq >= min_freq)
-freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
-findFreqTerms(Oprah5, lowfreq = min_freq)
+#Create DTM
+Oprah4DTM<- Corpus(VectorSource(Oprah4))
+Oprah4DTM<- DocumentTermMatrix(Oprah4)
 
-ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
+#Define Frequency Variables for Oprah4
+min_freq <- 1
+term_freq <- colSums(as.matrix(Oprah4DTM))
+term_freq <- subset(term_freq, term_freq >= min_freq)
+Oprah4_freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
+findFreqTerms(Oprah4DTM, lowfreq = min_freq)
+
+ggplot(data = Oprah4_freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
   geom_bar(stat="identity") + 
   coord_flip() +
   ggtitle("Frequency of Most-Used Terms") +
@@ -112,4 +112,3 @@ ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = fre
         axis.title.y = element_text(face="bold", size = 12),
         axis.text.x = element_text(face="bold", size=10),
         axis.text.y = element_text(face="bold", size=10))
-
