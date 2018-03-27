@@ -14,12 +14,12 @@ podcast_corpus <- Corpus(VectorSource(Podcast_Dataset))
 #Create a Histogram for Episode Popularity
 
 ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
-  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8") 
+  geom_histogram(binwidth = 1, fill = "#377EB8") 
 
 #Create a Histogram for Release Date
 
 ggplot(Podcast_Dataset, aes(`Release Date`)) +
-  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
+  geom_histogram(binwidth = 1, fill = "#377EB8")
 
 # Create a scatterplot for Release Date and Popularity Rating
 ggplot(Podcast_Dataset, aes(x = `Release Date`, y = `Popularity Rating`)) +
@@ -75,40 +75,3 @@ ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = fre
 
 # Wordcloud
 wordcloud (podcast_corpus, scale = c(2, 0.5), colors = brewer.pal(8, "Paired"),  random.color = TRUE, random.order = FALSE, max.words = 250)
-
-#Breakout the Podcasts by Popularity Rating
-ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
-  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8") +facet_wrap(~Podcast, ncol=4)
-
-#Create a Matrix for Oprah's Podcast
-Oprah <- Podcast_Dataset[1:17, c(1:6)]
-
-Oprah5 <- Oprah[1:3, 6]
-Oprah4 <- Oprah[4:8, 6]
-Oprah3 <- Oprah[9:16, 6]
-Oprah2 <- Oprah[17, 6]
-
-#Find Frequent Words 
-
-#Create DTM
-Oprah4DTM<- Corpus(VectorSource(Oprah4))
-Oprah4DTM<- DocumentTermMatrix(Oprah4)
-
-#Define Frequency Variables for Oprah4
-min_freq <- 1
-term_freq <- colSums(as.matrix(Oprah4DTM))
-term_freq <- subset(term_freq, term_freq >= min_freq)
-Oprah4_freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
-findFreqTerms(Oprah4DTM, lowfreq = min_freq)
-
-ggplot(data = Oprah4_freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
-  geom_bar(stat="identity") + 
-  coord_flip() +
-  ggtitle("Frequency of Most-Used Terms") +
-  xlab("Terms") +
-  ylab("Frequency") + 
-  theme(plot.title = element_text(size=14, face="bold", margin = margin(10, 0, 10, 0)), 
-        axis.title.x = element_text(face="bold", size = 12),
-        axis.title.y = element_text(face="bold", size = 12),
-        axis.text.x = element_text(face="bold", size=10),
-        axis.text.y = element_text(face="bold", size=10))
