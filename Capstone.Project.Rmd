@@ -1,9 +1,11 @@
 ---
-title: "Capstone.Project"
+title: "CapstoneProject"
 author: "Jennifer Klein"
-date: "2/22/2018"
-output: html_document
+date: "3/06/2018"
+output:
+  pdf_document: default
 ---
+
 ## Introduction
 
 Podcasts have emerged as the trendy new medium in media. But there’s still so little we know about the audience listening to this nascent form of entertainment. We know how many times a podcast is downloaded, but we don’t know audience demographics, how many people are skipping through ads, etc. That’s all about to change with Apple’s recent announcement that they are finally going to provide comprehensive analytics about listener behavior to podcast publishers. We can use data to seek out emerging trends in the genre.
@@ -29,7 +31,7 @@ Since I don't want my sample to be too disparate, I will stick to the top 50 or 
 
 First, I'll load all the relevant libraries for this project. 
 
-```{r, message=FALSE}
+```{r,}
 library(tidyverse)
 library(tm)
 library(wordcloud)
@@ -65,13 +67,16 @@ Once my data was collected, I set to work on cleaning it. For this, I used some 
 
 ```{r}
 library(tm)
+library(readr)
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
-Podcast_Dataset <- tm_map (Podcast_Dataset, tolower)
-Podcast_Dataset <- tm_map (Podcast_Dataset, removeWords, stopwords("english"))
-Podcast_Dataset <- tm_map (Podcast_Dataset, removeNumbers)
-Podcast_Dataset <- tm_map(Podcast_Dataset, removePunctuation)
-Podcast_Dataset <- tm_map (Podcast_Dataset, stemDocument)
+podcast_corpus <- tm_map (podcast_corpus, tolower)
+podcast_corpus <- tm_map (podcast_corpus, removeWords, stopwords("english"))
+podcast_corpus <- tm_map (podcast_corpus, removeNumbers)
+podcast_corpus <- tm_map (podcast_corpus, removePunctuation)
+podcast_corpus <- tm_map (podcast_corpus, stemDocument)
+podcast_corpus <- tm_map (podcast_corpus, stripWhitespace)
+str(podcast_corpus)
 ```
 
 Once my data was cleaned, I could move forward with analysis.
@@ -95,8 +100,8 @@ library(ggplot2)
 library(readr)
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
-ggplot(Podcast_Dataset, aes(`Popularity Rating`)) +
-  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
+ggplot(Podcast_Dataset, aes(`Popularity Rating`)) 
++ geom_histogram(binwidth = 1, fill = "#377EB8")
 ```
 
 Here we can see that the majority of podcast episodes are only somewhat popular, with most being ranked at around 3. Interestingly, we can also see that popular podcasts ranked at a 5 pop up only slightly more frequently than those that are slightly unpopular, ranked at a 2.
@@ -109,10 +114,11 @@ Since I collected my data over the summer, I wondered if perhaps the popularity 
 ```{r}
 library(ggplot2)
 library(readr)
+
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
 
 ggplot(Podcast_Dataset, aes(`Release Date`)) +
-  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
+geom_histogram(binwidth = 1, fill = "#377EB8")
 ```
 My thought was that perhaps the most popular podcasts were the ones most recently listened to by subscribers who downloaded new episodes every week. These summer episodes would be the most popular, receiving ratings of 4 and 5, while podcasts with earlier release dates would have ratings of 3 or lower.
 
@@ -133,7 +139,7 @@ I decided to make a time-series plot for each Podcast's Popularity Rating and Ru
 
 ```{r} 
 ggplot(Podcast_Dataset, aes(x = `Popularity Rating`, y = `Running Time`, color = `Podcast`)) +
-  geom_line(position = position_fill(0.1))
+  geom_line(position = position_fill(0.5)) +facet_wrap(~Podcast, ncol=4)
 ```
 
 According to this time-series plot, there isn’t really a correlation between episode length and popularity. The most popular podcasts come in all different lengths: short, long and in between. 
@@ -142,12 +148,15 @@ So outside of recency, what makes a podcast popular? What do listeners want and 
 
 ## Creating a DTM
 
-I then created a Document Term Matrix so I can see the frequency of terms that occur in my data set. We can see that the DTM has 2,550 terms.
+I then created a Document Term Matrix so I can see the frequency of terms that occur in my data set. We can see that the DTM has 2,567 terms.
 
 ```{r}
-Podcast_Dataset <- DocumentTermMatrix (Podcast_Dataset)
+podcast_corpus <- tm_map(podcast_corpus, PlainTextDocument)
+podcast_corpus <- Corpus(VectorSource(podcast_corpus))
+podcast_DTM <- DocumentTermMatrix(podcast_corpus)
 
-dim(Podcast_Dataset)
+dim(podcast_DTM)
+
 ```
 
 ## Plotting Frequency
@@ -158,10 +167,10 @@ First, we'll look at the most frequent words - words occurring more than 20 time
 
 ```{r}
 min_freq <- 20
-findFreqTerms(Podcast_Dataset, lowfreq = min_freq)
-term_freq <- colSums(as.matrix(Podcast_Dataset))
+term_freq <- colSums(as.matrix(podcast_DTM))
 term_freq <- subset(term_freq, term_freq >= min_freq)
 freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
+findFreqTerms(podcast_DTM, lowfreq = min_freq)
 
 ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
   geom_bar(stat="identity") + 
@@ -169,11 +178,11 @@ ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = fre
   ggtitle("Frequency of Most-Used Terms") +
   xlab("Terms") +
   ylab("Frequency") + 
-  theme(plot.title = element_text(size=14, face = "bold", margin = margin(10, 0, 10, 0)), 
-        axis.title.x = element_text(face = "bold", size = 12),
-        axis.title.y = element_text(face = "bold", size = 12),
-        axis.text.x = element_text(face = "bold", size = 10),
-        axis.text.y = element_text(face = "bold", size = 10))
+  theme(plot.title = element_text(size=14, face="bold", margin = margin(10, 0, 10, 0)), 
+        axis.title.x = element_text(face="bold", size = 12),
+        axis.title.y = element_text(face="bold", size = 12),
+        axis.text.x = element_text(face="bold", size=10),
+        axis.text.y = element_text(face="bold", size=10))
 ```
 It looks like true crime is a very popular Podcast topic: "killer", "murder", and "victim" are all made it into our most used terms. This makes sense for a medium that exploded in popularity after the series "Serial" premiered in late 2014 (in fact, "Serial" is the 4th most used term in our matrix.) "Conversation," "Discuss" and "Call" are all in our chart. This, to me, suggests that podcasts that feature two hosts interacting with each other, or with listeners calling in, might be more engaging to listeners than one person telling a story or monologue. We also see that the term "historical," "learn" and "political" pop up a lot - perhaps listeners are interested in historical narratives or in learning something about our past to inform our present political climate. And of course, perennial favorites "love" and "life" make an appearance, too.
 
@@ -182,3 +191,4 @@ To better visualize term frequency, we can also look at a wordcloud of the terms
 ```{r}
 wordcloud (podcast_corpus, scale = c(2, 0.5), colors = brewer.pal(8, "Paired"),  random.color = TRUE, random.order = FALSE, max.words = 250)
 ```
+
