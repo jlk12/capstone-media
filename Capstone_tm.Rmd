@@ -1,0 +1,89 @@
+---
+library(rmarkdown)
+render("Capstone_tm.Rmd")
+---
+## Text Mining & Analysis
+
+```{r}
+messages=FALSE
+library(tidyverse)
+Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
+glimpse(Podcast_Dataset)
+```
+Once my data was collected, the next step was to create a corpus. Since I was planning to do some text mining later in my analysis, creating the corpus was a crucial step.
+
+```{r}
+library(tm)
+podcast_corpus <- Corpus(VectorSource(Podcast_Dataset))
+```
+
+## Cleaning My Data
+
+Once my data was collected, I set to work on cleaning it. For this, I used some basic data cleaning functions. I used:
+
++ the tolower function to make my text uniform
++ removed stopwords, numbers and punctuation
++ used the stemDocument function
+
+```{r}
+library(tm)
+library(readr)
+Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
+
+podcast_corpus <- tm_map (podcast_corpus, tolower)
+podcast_corpus <- tm_map (podcast_corpus, removeWords, stopwords("english"))
+podcast_corpus <- tm_map (podcast_corpus, removeNumbers)
+podcast_corpus <- tm_map (podcast_corpus, removePunctuation)
+podcast_corpus <- tm_map (podcast_corpus, stemDocument)
+podcast_corpus <- tm_map (podcast_corpus, stripWhitespace)
+str(podcast_corpus)
+```
+
+Once my data was cleaned, I could move forward with analysis.
+
+## Creating a DTM
+
+I created a Document Term Matrix so I can see the frequency of terms that occur in my data set. We can see that the DTM has 2,549 terms.
+
+```{r}
+podcast_corpus <- tm_map(podcast_corpus, PlainTextDocument)
+podcast_corpus <- Corpus(VectorSource(podcast_corpus))
+podcast_DTM <- DocumentTermMatrix(podcast_corpus)
+
+dim(podcast_DTM)
+
+```
+
+## Plotting Frequency
+
+Now for the fun stuff: we can start to look for stories in our data.
+
+First, we'll look at the most frequent words - words occurring more than 20 times, in our case. Since the data set we're working with is fairly small, it made sense to keep this number relatively low. If we used a number much higher, we'd run the risk of not returning any results at all.
+
+```{r}
+min_freq <- 20
+term_freq <- colSums(as.matrix(podcast_DTM))
+term_freq <- subset(term_freq, term_freq >= min_freq)
+freq_words_df <- data.frame(term = names(term_freq), freq = term_freq)
+findFreqTerms(podcast_DTM, lowfreq = min_freq)
+
+ggplot(data = freq_words_df, aes(x = reorder(term, freq), y = freq, colour = freq)) + 
+  geom_bar(stat="identity") + 
+  coord_flip() +
+  ggtitle("Frequency of Most-Used Terms") +
+  xlab("Terms") +
+  ylab("Frequency") + 
+  theme(plot.title = element_text(size=14, face="bold", margin = margin(10, 0, 10, 0)), 
+        axis.title.x = element_text(face="bold", size = 12),
+        axis.title.y = element_text(face="bold", size = 12),
+        axis.text.x = element_text(face="bold", size=10),
+        axis.text.y = element_text(face="bold", size=10))
+```
+It looks like true crime is a very popular Podcast topic: "killer", "murder", and "victim" are all made it into our most used terms. This makes sense for a medium that exploded in popularity after the series "Serial" premiered in late 2014 (in fact, "Serial" is the 4th most used term in our matrix.) "Conversation," "Discuss" and "Call" are all in our chart. This, to me, suggests that podcasts that feature two hosts interacting with each other, or with listeners calling in, might be more engaging to listeners than one person telling a story or monologue. We also see that the term "historical," "learn" and "political" pop up a lot - perhaps listeners are interested in historical narratives or in learning something about our past to inform our present political climate. And of course, perennial favorites "love" and "life" make an appearance, too.
+
+To better visualize term frequency, we can also look at a wordcloud of the terms.
+
+```{r}
+library(wordcloud)
+wordcloud (podcast_corpus, scale = c(2, 0.5), colors = brewer.pal(8, "Paired"),  random.color = TRUE, random.order = FALSE, max.words = 250)
+```
