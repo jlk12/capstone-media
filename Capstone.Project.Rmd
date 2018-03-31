@@ -89,7 +89,7 @@ Using the Popularity Rating system I devised earlier, I decided to use those ran
 
 Clustering is an unsupervised learning method, where I’ll try to segment the data into similar groups, instead of trying to predict an outcome. Clustering can also be used to improve predictive methods. And by using Hierarchical clustering, I created a dendrogram to decide how many clusters to use in my final model.
 
-#Creating the Dendrogram
+## Creating the Dendrogram
 
 ```{r}
 library(readr)
@@ -102,7 +102,7 @@ plot(clusterPodcasts)
 
 According to the dendrogram, it looks like 4 clusters would be a good choice when making episode recommendations. 
 
-#Analyze Clusters
+## Analyze Clusters
 
 ```{r}
 clusterGroups <- cutree(clusterPodcasts, k = 4)
