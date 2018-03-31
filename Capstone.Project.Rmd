@@ -89,8 +89,6 @@ Using the Popularity Rating system I devised earlier, I decided to use those ran
 
 Clustering is an unsupervised learning method, where I’ll try to segment the data into similar groups, instead of trying to predict an outcome. Clustering can also be used to improve predictive methods. And by using Hierarchical clustering, I created a dendrogram to decide how many clusters to use in my final model.
 
-## Creating the Dendrogram
-
 ```{r}
 library(readr)
 Podcast_Dataset <- read_csv("~/Documents/Podcast_Dataset.csv")
@@ -101,8 +99,6 @@ plot(clusterPodcasts)
 ```
 
 According to the dendrogram, it looks like 4 clusters would be a good choice when making episode recommendations. 
-
-## Analyze Clusters
 
 ```{r}
 clusterGroups <- cutree(clusterPodcasts, k = 4)
@@ -188,6 +184,7 @@ podcast_corpus <- Corpus(VectorSource(podcast_corpus))
 podcast_DTM <- DocumentTermMatrix(podcast_corpus)
 
 dim(podcast_DTM)
+
 ```
 
 ## Plotting Frequency
@@ -222,3 +219,13 @@ To better visualize term frequency, we can also look at a wordcloud of the terms
 ```{r}
 wordcloud (podcast_corpus, scale = c(2, 0.5), colors = brewer.pal(8, "Paired"),  random.color = TRUE, random.order = FALSE, max.words = 250)
 ```
+
+## Going Forward: Next Steps and Recommendations
+
+Recommendation systems can definitely be an advantage to companies trying to reach consumers in an increasingly fractured entertainment marketplace. An excellent recommendation system can provide a company with the leg up they need. 
+
+Clustering algorithms can certainly go a long way to help reach your intended audience. It’s crazy that Apple hasn’t tried this approach yet; recommendation algorithms can make their interface less intimidating and more fun and addictive for the listener.  If publishers can successfully implement the “If You Liked X, Try Y” models popular on Netflix and Amazon, it would really help podcasts become more mainstream and, ultimately more lucrative. 
+
+When I started this project, I initially wanted to use more text mining in my analysis and see if I could use term associations to see if there was a correlation between episode description and popularity. Unfortunately, this is where some of the limitations of my dataset became apparent. Due to its relatively small size, very few terms came back once I split the set into sections divided by popularity rating. Try as I might, I couldn’t draw any conclusions from the sole results of “language” and “list.”
+
+But, clearly, my data still tells a story. Going forward, I would recommend that publishers focus on producing content with the themes that popped up again and again in the Top 50 Society & Culture podcasts on Apple: true crime, historical and political content and lifestyle/wellness. Celebrity hosts don’t hurt, either. 
