@@ -1,7 +1,4 @@
----
-library(rmarkdown)
-render("Capstone_tm.Rmd")
----
+
 ## Text Mining & Analysis
 
 ```{r}
