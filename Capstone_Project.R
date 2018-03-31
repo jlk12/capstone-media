@@ -45,6 +45,19 @@ podcast_corpus <- tm_map (podcast_corpus, stemDocument)
 podcast_corpus <- tm_map (podcast_corpus, stripWhitespace)
 str(podcast_corpus)
 
+#Machine Learning
+
+#Create Dendrogram
+distances <- dist(Podcast_Dataset[ ,6], method = "euclidean")
+clusterPodcasts <- hclust(distances, method = "ward.D")
+plot(clusterPodcasts)
+
+#Analyze Clusters
+clusterGroups <- cutree(clusterPodcasts, k = 4)
+tapply(Podcast_Dataset$`Popularity Rating`, clusterGroups)
+cluster1 <- subset(Podcast_Dataset, clusterGroups == 1)
+cluster1[1:6]
+
 #Create DTM
 podcast_corpus <- tm_map(podcast_corpus, PlainTextDocument)
 podcast_corpus <- Corpus(VectorSource(podcast_corpus))
